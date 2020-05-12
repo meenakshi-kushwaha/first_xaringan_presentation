@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Absolute PCA method for emission factors</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Meenakshi Kushwaha" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Absolute PCA method for emission factors
+## A mobile monitoring approach
+### Meenakshi Kushwaha
+### Namma Journal Club | ILK Labs
+### 1st May 2020
+
+---
+
+
+.center[![  ](title.png)]
+---
+# What are Emission Factors?
+
+- Pollutant emitted by an actvity
+
+- Expressed as weight of the pollutant divided by a unit weight, volume, distance, or duration of the activity
+
+- Emission factors may differ for petrol- vs. diesel-powered vehicles
+
+---
+class: top, left
+
+# What is PCA or Principle Component Analysis?
+- Technique to reduce dimensionality
+- Replace large set of intercorrleated variables with a smaller number independent variables
+- New variables (or dimensions/principle components) are linear combinations of original variables 
+
+***Remember: Your data stays the same, your frame of reference changes***
+
+.center[![description of the image](pca.gif)]
+
+---
+
+background-image: url('ex1.png')
+background-size: 50% 
+background-position: 50% 50%
+
+# Example - 2D PCA plot from 30 variables
+???
+need reference
+
+---
+background-image: url('car.jpg')
+background-size: 50% 
+background-position: 50% 70%
+
+# Mobile Platform
+
+  - Ambient-targeted
+    - Bangalore study
+
+
+  - Vehicle-targeted
+    - Chasing and analyzing exhaust plumes from individual vehicles
+
+---
+# Methods
+
+###Pollutants
+  - Measured BC, NOx, CO, CO&lt;sub&gt;2&lt;/sub&gt;, and PN
+  - CO&lt;sub&gt;2&lt;/sub&gt; is a measure of fuel consumption (traffic volume)
+  - Diesel trucks are important contributors to NOx, PN, and BC
+  - petrol vehicles emit more CO than Diesel
+  
+###Set-up
+  - petrol powered Buick 
+  - 1 Hz measurements
+  - Integrated into a database @ 1 record per 10s
+      - The information
+recorded included test time, longitude, latitude and instantaneous speed from the GPS, and 10-s averaged concentrations of NOX, BC, CO, PN, and CO&lt;sub&gt;2&lt;/sub&gt; collected simultaneously from five different instruments
+
+---
+background-image: url('setup.jpg')
+background-size:100%
+background-position:50% 70%
+
+# Sampling route and set-up
+ 
+---
+background-image: url('chase.jpeg')
+background-size:40%
+background-position:50% 90%
+# Data Collection
+
+- January 12–18, 2018. 
+- Routes were covered two to three times each. 
+- ~30 km/h for busy expressways, ~70 km/h for highways 
+- ~ one-third of the data were “chase data” 
+- Chasing Diesel Truck for ~2min and then regular driving looking for next chase 
+- Chased vehicles were based on convenience
+- Total Diesel Trucks chased = 300 
+
+---
+background-image: url('instruments.png')
+background-size:100%
+background-position:50% 50%
+
+#Instrumentation
+---
+#Data Processing
+###Smoothing
+- Moving block average
+of consecutive observations in a 70-s interval centered on each 10-s observation
+
+###Removing background values
+- Estimated bg concentrations with each 10s observation and substracted this bg value from the 70s avg
+
+###Removing outliers
+- CO&lt;sub&gt;2&lt;/sub&gt; concentration &lt; 5ppm (Instrument precision limit)
+- Concentration value is above the 95th daily percentile value for each pollutant
+
+---
+#Absoluted PCA method
+
+1. Center and Scale all variables
+2. Run PCA function in R/STATA/SPSS
+3. Compute Principle component scores --&gt; refine results (varimax rotation)
+4. Create zero vector and scores --&gt; refine results
+5. Compute Absolute principle component scores (#3-#4)
+6. Run regression
+7. Use regression intercept to compute Concentration contribution from each pollutant
+8. Compute emission factor for each fuel (petrol, diesel) using using #7 
+
+---
+#Results - Chase &amp; non-chase data
+
+.center[![  ](chaseplot.png)]
+---
+# Results - Mean/median concentrations
+.center[![ ](table2.png)]
+
+???
+Mean/median concentrations for PN, NOX, BC, and CO2 are
+higher for chase than for non-chase data because the chase data
+targeted Diesel Trucks, while CO concentrations are comparable for two
+datasets in terms of the mean values. *CO is higher in petrol vehicles than diesel hence they are comparable*
+
+---
+background-image: url('ex1.png')
+background-size: 50% 
+background-position: 50% 90%
+#Principle Component Analysis
+
+Technique to reduce dimensions
+
+***Your data stays the same, your frame of reference changes***
+
+---
+background-image: url('table3.png')
+background-size:100%
+background-position:50% 95%
+#Results - PCA for non-chase data
+- PN, NOx and BC have high values in first principle component
+- CO has higher values in second principle component
+- the two components account for 67% of the
+variance of the non-chase data.
+
+???
+- Higher loadings/coefficients indicate the higher correlation
+between them. 
+- Because NOX, PN and BC tend to reflect diesel vehicles
+and CO is a typical pollutant for petrol vehicles, the first and second
+features can be considered to represent diesel and petrol-featured vehicles.
+- NOTE: Even though we did not manually select
+a diesel and a petrol component in the data, instead, results for
+those two vehicle types arise on their own from PCA of on-road
+measurements.
+- ? question - why not do this without CO2 data since that is predictor of traffic volume
+
+---
+background-image: url('table4.png')
+background-size:100%
+background-position:50% 95%
+
+#Results - PCA for chase data (Diesel Truck)
+- NOx has high values in first principle component
+- PN and BC have higher values in second principle component
+- the two components account for 65% of the
+variance of the non-chase data.
+---
+background-image: url('scatter.png')
+background-size:65%
+background-position:50% 98%
+#Results - PCA for chase data (Diesel Truck)
+How does pollutant concentration change with change in traffic volume?
+- Slope indicates (relative) emission factor
+- Higher emitters have higher slopes
+???
+For the chase data for HDDTs, the best-fit line for scatterplots of concentration variances between adjacent observations versus CO2 
+sheds light on the approximate emission factor for that component.Slope of the orange line which is the best fit line reflects typical fuel-based emission factor for that feature, as CO2 is a measurement of fuel consumption. The slope here is 5-13 times higher for PN-BC rich feature than for Nox rich feature. we are basically able to see the higher emitters seperated form the low emitters. This is consitent with fact that EF of top 5% high emitting diesel trucks is 7-18 times higher than normal emitting diesel trucks. Therefor NOx and PN-BC rich features reflect normal and high emitting patterns for diesel trucks. 
+---
+class: center, center
+
+#Reminder
+###NOx-rich feature refers to NOx being a strong component of that feature. It does not necessarily  mean that (NOx)emission factor is higher for that feature than for other feature (PN-BC rich feature). 
+---
+background-image: url('nonchase.png')
+background-size:85%
+background-position:50% 90%
+#Results - Spatial variation - non chase
+Diesel trucks are prohibited from entering the arterial roads in main urban area so they are mainly seen on the ring roads 
+.pull-left[
+###CO rich feature]
+.pull-right[
+###PN-NOx-BC-rich feature]
+
+
+
+---
+background-image: url('chase.png')
+background-size:65%
+background-position:50% 95%
+#Results - Spatial variation - chase (Diesel Truck)
+- NOx-rich(normal emitting) is prominent in second-ring road
+- High emitting is prominent in fourth ring road
+- In 2018 non-compliant vehicles could not enter the area within 3rd RR
+.pull-left[
+###NOx rich feature]
+.pull-right[
+###PN-BC-rich feature]
+
+---
+background-image: url('nox_gasoline.png')
+background-size:80%
+background-position:50% 60%
+# Results - NOx Emission factor - Petrol
+---
+background-image: url('nox_diesel.png')
+background-size:80%
+background-position:50% 60%
+# Results - NOx Emission factor - Diesel
+---
+#Summary
+- APCA approach can differentiate between diesel and petrol vehicles
+
+- High-emitting diesel trucks are 3–13 times dirtier than
+normal 
+
+- Removing high emitters can reduce emissions by half
+
+- Identifying and removing a small fraction of vehicles from a fleet can have significant reductions in emissions
+
+---
+
+class: center, middle
+
+# Thanks!
+
+Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
