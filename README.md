@@ -11,4 +11,6 @@ Paper presentation date - 1st May 2020.
 - https://stats.stackexchange.com/questions/2691/making-sense-of-principal-component-analysis-eigenvectors-eigenvalues
 - https://towardsdatascience.com/principal-component-analysis-pca-101-using-r-361f4c53a9ff.
 
-Need to tweak .css file to directly add these references to footnote in the presentation.
+TO DO for next presentation
+- Need to tweak .css file to add references in footnote
+- Dimming bullet points https://www.garrickadenbuie.com/blog/better-progressive-xaringan/
