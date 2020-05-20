@@ -14,3 +14,4 @@ Paper presentation date - 1st May 2020.
 TO DO for next presentation
 - Need to tweak .css file to add references in footnote
 - Dimming bullet points https://www.garrickadenbuie.com/blog/better-progressive-xaringan/
+- Try different theme https://www.garrickadenbuie.com/blog/xaringanthemer-v0-3-0/
